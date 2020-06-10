@@ -6,19 +6,21 @@ library(tidyr)
 library(RColorBrewer)
 
 # This is the threshold for a hotspot that we decide based on the permutation testing
-threshold=0.7
+threshold=0.3
 # ==========================================================================================
 # This section reads in the files
 # which directory for the merged data
 setwd("~/Documents/STB_hotspot/")
-all <- read.csv("~/Documents/STB_hotspot/wheat_all.csv", header=F)
+all <- read.csv("~/Documents/STB_hotspot/wheat_all.csv", header=T)
 colnames(all)<-c( "Chromosome", "start", "end", "GeneID","Score", "strand")
-expression_scores<-read.csv("~/Documents/STB_hotspot/riband_expression_scores.csv", header=T)
+expression_scores<-read.csv("~/Documents/STB_hotspot/expression_scores.csv", header=T)
+
 dir.create("Gene_cluster_analysis")
 
-clusters<-function(all, expression_scores, threshold){
+clusters<-function(all, expression_scores, threshold, window){
   # ==========================================================================================
   # this section reads in all files and does the window analysis
+  dir.create("Gene_cluster_analysis")
   diseases<-colnames(expression_scores)[-1]
   hotspots_together<-list()
   stress_together<-list()
@@ -33,7 +35,7 @@ clusters<-function(all, expression_scores, threshold){
       colnames(selection)<-c("GeneID", "Disease")
       bed <- join(bed, selection, by="GeneID")
       bed[is.na(bed)]<-0
-      bed$density<-rollapply(bed$Disease, width=10, FUN=mean, by.column=FALSE, fill=0)
+      bed$density<-rollapply(bed$Disease, width=window, FUN=mean, by.column=FALSE, fill=0)
       bed$Consecutive<-sequence(rle(as.character(bed$Disease))$lengths)
       bed$Stress<-paste(d)
       List[[length(List)+1]] = bed
@@ -104,4 +106,10 @@ clusters<-function(all, expression_scores, threshold){
       coord_cartesian(ylim=c(0,1))
     ggsave(plot, file=paste("Gene_cluster_analysis/", i, "all_stress.pdf"), width=300, height=300, unit="mm", dpi=400)
   }
+}
+
+for(i in 10:20){
+  dir.create(paste("window_", i, sep=""))
+  setwd(paste("window_", i, sep=""))
+  clusters(all, expression_scores, threshold, i)
 }
