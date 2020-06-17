@@ -42,5 +42,6 @@ all_sig<-all[(all$padj<0.05),]
 all_sig<-all_sig[abs(all_sig$log2FoldChange)>.5,]
 all_sig<-na.omit(all_sig)
 
+write.csv(all_sig, file="~/Documents/STB_hotspot/riband_STB_expression_scores.csv")
 
 

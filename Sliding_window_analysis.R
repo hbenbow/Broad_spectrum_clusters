@@ -50,8 +50,8 @@ clusters<-function(all, expression_scores, threshold){
       data<-df[i,]
       if(data$density >= threshold){
         peak=paste(data$GeneID)
-        min=i-4
-        max=i+4
+        min=i-5
+        max=i+5
         hotspot<-df[(min:max),]
         Density[[length(Density)+1]]= hotspot
       }}
