@@ -5,15 +5,15 @@ library(dplyr)
 library(tidyr)
 options(scipen = 999)
 
-# Read in gene coordinate file, containing Chromosome name, gene start posiiton, gene end
+# Read in gene coordinate file, containing Chromosome name, gene start position, gene end
 # position, gene id, and strand. Do not need strand.
 
-all <- read.csv("~/Documents/Hotspots/Paper_version_4/wheat_all.csv", header=T)
+all <- read.csv("/home/hbenbow/Broad_spectrum_hotspots/wheat_all.csv", header=T)
 colnames(all)<-c( "Chromosome", "start", "end", "GeneID", "Score", "strand")
 # Read in expression scores. This is a .csv file in which each row is a gene
 # an d order must correspond to the order in the gene coordinate file. Each column after 
 # the gene column is 
-expression_scores<-read.csv("~/Documents/Hotspots/Paper_version_4/expression_scores.csv", header=T)
+expression_scores<-read.csv("/home/hbenbow/Broad_spectrum_hotspots/expression_scores.csv", header=T)
 
 
 diseases<-colnames(expression_scores)[-1]
