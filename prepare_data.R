@@ -1,15 +1,22 @@
+setwd("~/Documents/Broad_spectrum_clusters/Raw_data/")
+files=dir(pattern="RES")
+all <- read.csv("~/Documents/Hotspots/Paper_version_4/wheat_all.csv", header=T)
+colnames(all)<-c( "Chromosome", "start", "end", "GeneID","Score", "strand")
+expression_scores<-as.data.frame(all$GeneID)
+colnames(expression_scores)<-"Gene"
+for(i in files){
+  study<-paste(i)
+  study<-substr(study, 5, nchar(study)-4)
+  data<-read.csv(i)
+  data=data[(data$padj<0.05),]
+  data=data[(abs(data$log2FoldChange)>1),]
+  genes<-data.frame(do.call('rbind', strsplit(data$Gene,'.',fixed=TRUE)))[,1]
+  genes<-as.data.frame(unique(genes))
+  genes$DE<-1
+  colnames(genes)<-c("Gene", paste(study))
+  expression_scores<-left_join(expression_scores, genes, by="Gene", all.x=T)
+  expression_scores[is.na(expression_scores)]<-0
+}
 
-all <- read.csv("~/Documents/Broad_spectrum_clusters/Raw_data/all_data.csv", header=T)
-all$DE<-1
-sub<-all[,c(9, 8, 10)]
-expression_scores<-spread(sub, key="Factor", value="DE", fill=0)
-genes<-as.character(unique(expression_scores$Gene))
-genes<-data.frame(do.call('rbind', strsplit(genes,'.',fixed=TRUE)))
-genes$X2<-1
-expression_scores$Gene<-genes$X1
-genes<-data.frame(do.call('rbind', strsplit(genes,'.',fixed=TRUE)))
-studies<-colnames(expression_scores)
-studies<-gsub(" ", ".", studies)
-colnames(expression_scores)<-studies
 
 write.csv(expression_scores, file="~/Documents/Broad_spectrum_clusters/Raw_data/expression_scores.csv", row.names=F)

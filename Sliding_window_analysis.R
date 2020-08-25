@@ -10,10 +10,10 @@ threshold=0.7
 # ==========================================================================================
 # This section reads in the files
 # which directory for the merged data
-setwd("~/Documents/STB_hotspot/")
-all <- read.csv("~/Documents/STB_hotspot/wheat_all.csv", header=F)
+setwd("~/Documents/Broad_spectrum_clusters/Raw_data/")
+all <- read.csv("~/Documents/Hotspots/Paper_version_4/wheat_all.csv", header=F)
 colnames(all)<-c( "Chromosome", "start", "end", "GeneID","Score", "strand")
-expression_scores<-read.csv("~/Documents/STB_hotspot/riband_expression_scores.csv", header=T)
+expression_scores<-read.csv("~/Documents/Broad_spectrum_clusters/Raw_data/expression_scores.csv", header=T)
 dir.create("Gene_cluster_analysis")
 
 clusters<-function(all, expression_scores, threshold){
